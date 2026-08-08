@@ -820,19 +820,26 @@ section { padding-block: var(--space-9); }
   gap: var(--space-3);
   min-height: 220px;
   justify-content: flex-end;
+  background-size: cover;
+  background-position: center;
   transition: transform var(--dur-base) var(--ease-spring);
 }
 .brand-card:hover { transform: translateY(-6px); }
+/* Velo de abajo hacia arriba (mismo lenguaje que el hero): dejar ver la foto
+   de marca arriba y garantizar contraste para el texto abajo. */
 .brand-card::before {
   content: "";
   position: absolute; inset: 0;
-  opacity: 0.9;
+  background: linear-gradient(180deg, transparent 0%, rgba(10, 7, 14, 0.15) 40%, rgba(10, 7, 14, 0.72) 100%);
   z-index: 0;
 }
 .brand-card > * { position: relative; z-index: 1; }
-.brand-card--mercola::before { background: linear-gradient(135deg, var(--color-primary), var(--color-primary-dark)); }
-.brand-card--bloom::before { background: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark)); }
-.brand-card--hum::before { background: linear-gradient(135deg, var(--color-success), var(--color-success-dark)); }
+/* Mercola y Bloom ya tienen foto real de marca; el color de marca queda
+   como fondo de respaldo mientras carga o si falla. HUM sigue en degradado
+   sólido hasta que suba su foto (mismo patrón: solo agregar background-image). */
+.brand-card--mercola { background-color: var(--color-primary-dark); background-image: url("../img/marcas/mercola.jpg"); }
+.brand-card--bloom { background-color: var(--color-accent-dark); background-image: url("../img/marcas/bloom.jpg"); }
+.brand-card--hum { background-image: linear-gradient(135deg, var(--color-success), var(--color-success-dark)); }
 .brand-card h3 { color: #fff; font-size: var(--fs-xl); margin: 0; }
 .brand-card p { color: rgba(255,255,255,0.85); margin: 0; }
 .brand-card__link {
