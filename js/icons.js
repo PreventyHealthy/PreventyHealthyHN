@@ -33,6 +33,8 @@ const ICONS = {
   package: '<path d="M16 4 27 9.5v13L16 28 5 22.5v-13L16 4Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M5 9.5 16 15l11-5.5M16 15v13" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>',
   users: '<circle cx="12" cy="12" r="4.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M4 26c0-4.4 3.6-7.5 8-7.5s8 3.1 8 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="22" cy="11" r="3.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 18.5c3.6.4 6 3.2 6 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
   award: '<circle cx="16" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M11.5 18.5 9 28l7-3 7 3-2.5-9.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>',
+  cart: '<path d="M9 12V9a7 7 0 0 1 14 0v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6.5 12h19l-1.6 15.2a2 2 0 0 1-2 1.8H10.1a2 2 0 0 1-2-1.8L6.5 12Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>',
+  trash: '<path d="M6 9h20M13 9V6.5A1.5 1.5 0 0 1 14.5 5h3A1.5 1.5 0 0 1 19 6.5V9M9.5 9l1.2 17.5A2 2 0 0 0 12.7 28h6.6a2 2 0 0 0 2-2.5L22.5 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
 };
 
 function icon(name, extraClass) {

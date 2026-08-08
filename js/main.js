@@ -35,8 +35,194 @@ document.addEventListener("DOMContentLoaded", () => {
   initCounters();
   initScrollHero();
   initHeroGlow();
+  initCart();
   if (document.getElementById("product-grid")) initCatalog();
 });
+
+/* ---------- Carrito de compra ----------
+   Vive en localStorage (id de producto -> cantidad) y persiste entre las 4
+   páginas, que ya comparten products-data.js. El "checkout" sigue siendo un
+   mensaje de WhatsApp (el sitio no procesa pagos), pero ahora con todo el
+   pedido y el total ya armados en un solo mensaje en vez de uno por producto. */
+const CART_KEY = "preventy_cart";
+const SHIPPING_COST = 112;
+
+function formatMoney(n) {
+  return `L. ${Number(n).toLocaleString("es-HN")}`;
+}
+
+function getCart() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(CART_KEY) || "{}");
+    return raw && typeof raw === "object" ? raw : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveCart(cart) {
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  document.dispatchEvent(new CustomEvent("cart:updated"));
+}
+
+function addToCart(id, qty = 1) {
+  const cart = getCart();
+  cart[id] = (cart[id] || 0) + qty;
+  saveCart(cart);
+}
+
+function setCartQty(id, qty) {
+  const cart = getCart();
+  if (qty <= 0) delete cart[id];
+  else cart[id] = qty;
+  saveCart(cart);
+}
+
+function removeFromCart(id) {
+  const cart = getCart();
+  delete cart[id];
+  saveCart(cart);
+}
+
+// Resuelve el carrito contra el catálogo actual: si un producto se agotó o
+// le quitaron el precio después de agregarlo, se cae solo del carrito.
+function getCartLines() {
+  const cart = getCart();
+  const lines = [];
+  let changed = false;
+  for (const [id, qty] of Object.entries(cart)) {
+    const product = PRODUCTS.find((p) => p.id === id);
+    if (!product || !product.available || !product.price) {
+      delete cart[id];
+      changed = true;
+      continue;
+    }
+    lines.push({ product, qty });
+  }
+  if (changed) localStorage.setItem(CART_KEY, JSON.stringify(cart));
+  return lines;
+}
+
+function initCart() {
+  const drawer = document.getElementById("cart-drawer");
+  if (!drawer) return;
+
+  const toggles = document.querySelectorAll(".cart-toggle");
+  const closeBtn = drawer.querySelector(".cart-drawer__close");
+  const backdrop = drawer.querySelector(".cart-drawer__backdrop");
+  const itemsEl = drawer.querySelector("[data-cart-items]");
+  const footerEl = drawer.querySelector("[data-cart-footer]");
+  const subtotalEl = drawer.querySelector("[data-cart-subtotal]");
+  const shippingEl = drawer.querySelector("[data-cart-shipping]");
+  const totalEl = drawer.querySelector("[data-cart-total]");
+  const checkoutLink = drawer.querySelector("[data-cart-checkout]");
+  const clearBtn = drawer.querySelector("[data-cart-clear]");
+  const badges = document.querySelectorAll("[data-cart-badge]");
+
+  const open = () => {
+    drawer.classList.add("is-open");
+    toggles.forEach((t) => t.setAttribute("aria-expanded", "true"));
+    document.body.style.overflow = "hidden";
+  };
+  const close = () => {
+    drawer.classList.remove("is-open");
+    toggles.forEach((t) => t.setAttribute("aria-expanded", "false"));
+    document.body.style.overflow = "";
+  };
+
+  function render() {
+    const lines = getCartLines();
+    const count = lines.reduce((sum, l) => sum + l.qty, 0);
+
+    badges.forEach((b) => {
+      b.textContent = String(count);
+      b.hidden = count === 0;
+    });
+
+    if (!lines.length) {
+      itemsEl.innerHTML = `
+        <div class="cart-drawer__empty">
+          ${icon("cart")}
+          <p>Tu carrito está vacío.<br>Agregá productos desde el catálogo.</p>
+        </div>`;
+      footerEl.hidden = true;
+      return;
+    }
+
+    itemsEl.innerHTML = lines
+      .map(({ product: p, qty }) => {
+        const brand = BRANDS[p.brand];
+        const media = p.image
+          ? `<img src="${p.image}" alt="${p.name}">`
+          : icon(CATEGORY_ICONS[p.category] || "capsule");
+        return `
+        <div class="cart-item">
+          <div class="cart-item__media">${media}</div>
+          <div class="cart-item__body">
+            <div class="cart-item__name">${p.name}</div>
+            <div class="cart-item__price">${brand.name} · ${formatMoney(p.price)} c/u</div>
+            <div class="cart-item__controls">
+              <span class="cart-item__qty">
+                <button type="button" data-cart-decr="${p.id}" aria-label="Quitar una unidad">−</button>
+                <span>${qty}</span>
+                <button type="button" data-cart-incr="${p.id}" aria-label="Agregar una unidad">+</button>
+              </span>
+              <button type="button" class="cart-item__remove" data-cart-remove="${p.id}">Quitar</button>
+            </div>
+          </div>
+          <div class="cart-item__subtotal">${formatMoney(p.price * qty)}</div>
+        </div>`;
+      })
+      .join("");
+
+    const subtotal = lines.reduce((sum, l) => sum + l.product.price * l.qty, 0);
+    const total = subtotal + SHIPPING_COST;
+    subtotalEl.textContent = formatMoney(subtotal);
+    shippingEl.textContent = formatMoney(SHIPPING_COST);
+    totalEl.textContent = formatMoney(total);
+    footerEl.hidden = false;
+
+    const messageLines = lines.map(
+      ({ product: p, qty }) => `• ${qty}x ${p.name} — ${formatMoney(p.price * qty)}`
+    );
+    const message = [
+      "Hola Preventy Healthy 👋, quiero hacer este pedido:",
+      "",
+      ...messageLines,
+      "",
+      `Subtotal: ${formatMoney(subtotal)}`,
+      `Envío: ${formatMoney(SHIPPING_COST)}`,
+      `Total: ${formatMoney(total)}`,
+      "",
+      "¿Me confirmás disponibilidad y cómo continuar?",
+    ].join("\n");
+    checkoutLink.setAttribute("href", waLink(message));
+  }
+
+  toggles.forEach((t) => t.addEventListener("click", open));
+  closeBtn?.addEventListener("click", close);
+  backdrop?.addEventListener("click", close);
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") close();
+  });
+
+  itemsEl.addEventListener("click", (e) => {
+    const incr = e.target.closest("[data-cart-incr]");
+    const decr = e.target.closest("[data-cart-decr]");
+    const remove = e.target.closest("[data-cart-remove]");
+    if (incr) addToCart(incr.dataset.cartIncr, 1);
+    else if (decr) setCartQty(decr.dataset.cartDecr, (getCart()[decr.dataset.cartDecr] || 0) - 1);
+    else if (remove) removeFromCart(remove.dataset.cartRemove);
+  });
+
+  clearBtn?.addEventListener("click", () => {
+    localStorage.removeItem(CART_KEY);
+    document.dispatchEvent(new CustomEvent("cart:updated"));
+  });
+
+  document.addEventListener("cart:updated", render);
+  render();
+}
 
 /* ---------- Brillo del hero que sigue el cursor (solo desktop) ---------- */
 function initHeroGlow() {
@@ -271,9 +457,9 @@ function initCatalog() {
       ? `<a class="btn btn-outline product-card__cta" href="${waRestockLink(p.name, brand.name)}" target="_blank" rel="noopener">
           ${icon("whatsapp")} Avisarme cuando esté disponible
         </a>`
-      : `<a class="btn btn-whatsapp product-card__cta" href="${waProductLink(p.name, brand.name)}" target="_blank" rel="noopener">
-          ${icon("whatsapp")} Pedir por WhatsApp
-        </a>`;
+      : `<button type="button" class="btn btn-primary product-card__cta" data-add-to-cart="${p.id}">
+          ${icon("cart")} Agregar al carrito
+        </button>`;
     return `
       <article class="product-card reveal${isOut ? " is-out" : ""}">
         <div class="product-card__media bg-${p.brand}">
@@ -300,6 +486,21 @@ function initCatalog() {
     if (resultCount) resultCount.textContent = `${filtered.length} producto${filtered.length === 1 ? "" : "s"}`;
     initReveal();
   }
+
+  // Delegado en el contenedor (no en cada tarjeta): sobrevive a los
+  // re-renders de render() cuando cambian filtros o búsqueda.
+  grid.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-add-to-cart]");
+    if (!btn) return;
+    addToCart(btn.dataset.addToCart, 1);
+    const original = btn.innerHTML;
+    btn.classList.add("is-cart-added");
+    btn.innerHTML = `${icon("check")} Agregado`;
+    setTimeout(() => {
+      btn.classList.remove("is-cart-added");
+      btn.innerHTML = original;
+    }, 1200);
+  });
 
   chipsBrand.forEach((chip) => {
     chip.addEventListener("click", () => {

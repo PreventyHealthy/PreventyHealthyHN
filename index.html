@@ -30,6 +30,10 @@
       <a class="btn btn-whatsapp btn-sm" data-wa="Hola Preventy Healthy 👋, quisiera hacer un pedido." href="#" target="_blank" rel="noopener">
         <span data-icon="whatsapp"></span> Pedir
       </a>
+      <button class="cart-toggle" aria-label="Ver carrito" aria-expanded="false" aria-controls="cart-drawer">
+        <span data-icon="cart"></span>
+        <span class="cart-toggle__badge" data-cart-badge hidden>0</span>
+      </button>
       <button class="nav-toggle" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
         <span data-icon="menu"></span>
       </button>
@@ -50,6 +54,35 @@
     <a class="btn btn-whatsapp btn-block" data-wa="Hola Preventy Healthy 👋, quisiera hacer un pedido." href="#" target="_blank" rel="noopener">
       <span data-icon="whatsapp"></span> Pedir por WhatsApp
     </a>
+  </div>
+</div>
+
+<div class="cart-drawer" id="cart-drawer">
+  <div class="cart-drawer__backdrop"></div>
+  <div class="cart-drawer__panel">
+    <div class="cart-drawer__header">
+      <h2><span data-icon="cart"></span> Tu pedido</h2>
+      <button class="cart-drawer__close" aria-label="Cerrar carrito"><span data-icon="close"></span></button>
+    </div>
+    <div class="cart-drawer__items" data-cart-items></div>
+    <div class="cart-drawer__footer" data-cart-footer hidden>
+      <div class="cart-drawer__row">
+        <span>Subtotal</span>
+        <span data-cart-subtotal>L. 0</span>
+      </div>
+      <div class="cart-drawer__row">
+        <span>Envío</span>
+        <span data-cart-shipping>L. 0</span>
+      </div>
+      <div class="cart-drawer__row cart-drawer__row--total">
+        <span>Total</span>
+        <span data-cart-total>L. 0</span>
+      </div>
+      <a class="btn btn-whatsapp btn-block" data-cart-checkout href="#" target="_blank" rel="noopener">
+        <span data-icon="whatsapp"></span> Finalizar pedido por WhatsApp
+      </a>
+      <button class="cart-drawer__clear" data-cart-clear>Vaciar carrito</button>
+    </div>
   </div>
 </div>
 
