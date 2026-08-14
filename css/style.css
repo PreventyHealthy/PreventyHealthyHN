@@ -989,12 +989,11 @@ section { padding-block: var(--space-9); }
   z-index: 0;
 }
 .brand-card > * { position: relative; z-index: 1; }
-/* Mercola y Bloom ya tienen foto real de marca; el color de marca queda
-   como fondo de respaldo mientras carga o si falla. HUM sigue en degradado
-   sólido hasta que suba su foto (mismo patrón: solo agregar background-image). */
+/* Las 3 marcas tienen foto real; el color de marca queda como fondo de
+   respaldo mientras carga la imagen o si falla. */
 .brand-card--mercola { background-color: var(--color-primary-dark); background-image: url("../img/marcas/mercola.jpg"); }
 .brand-card--bloom { background-color: var(--color-accent-dark); background-image: url("../img/marcas/bloom.jpg"); }
-.brand-card--hum { background-image: linear-gradient(135deg, var(--color-success), var(--color-success-dark)); }
+.brand-card--hum { background-color: var(--color-success-dark); background-image: url("../img/marcas/hum.webp"); }
 .brand-card h3 { color: #fff; font-size: var(--fs-xl); margin: 0; }
 .brand-card p { color: rgba(255,255,255,0.85); margin: 0; }
 .brand-card__link {
