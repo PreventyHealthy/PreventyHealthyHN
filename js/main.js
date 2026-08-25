@@ -154,7 +154,7 @@ function initCart() {
         const brand = BRANDS[p.brand];
         const media = p.image
           ? `<img src="${p.image}" alt="${p.name}">`
-          : icon(CATEGORY_ICONS[p.category] || "capsule");
+          : icon(CATEGORY_ICONS[p.categories[0]] || "capsule");
         return `
         <div class="cart-item">
           <div class="cart-item__media">${media}</div>
@@ -431,7 +431,7 @@ function initCatalog() {
 
   function matches(p) {
     const byBrand = state.brand === "todos" || p.brand === state.brand;
-    const byCategory = state.category === "todos" || p.category === state.category;
+    const byCategory = state.category === "todos" || p.categories.includes(state.category);
     const byQuery = !state.query || p.name.toLowerCase().includes(state.query) || BRANDS[p.brand].name.toLowerCase().includes(state.query);
     return byBrand && byCategory && byQuery;
   }
@@ -445,7 +445,7 @@ function initCatalog() {
 
   function cardTemplate(p) {
     const brand = BRANDS[p.brand];
-    const iconName = CATEGORY_ICONS[p.category] || "capsule";
+    const iconName = CATEGORY_ICONS[p.categories[0]] || "capsule";
     const media = p.image
       ? `<img src="${p.image}" alt="${p.name}" loading="lazy">`
       : icon(iconName);
@@ -468,7 +468,7 @@ function initCatalog() {
           ${media}
         </div>
         <div class="product-card__body">
-          <span class="product-card__brand">${CATEGORIES[p.category]}</span>
+          <span class="product-card__brand">${CATEGORIES[p.categories[0]] || "Suplemento"}</span>
           <h3 class="product-card__name">${p.name}</h3>
           ${priceMarkup(p)}
           ${cta}

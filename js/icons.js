@@ -35,6 +35,13 @@ const ICONS = {
   award: '<circle cx="16" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M11.5 18.5 9 28l7-3 7 3-2.5-9.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>',
   cart: '<path d="M9 12V9a7 7 0 0 1 14 0v3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M6.5 12h19l-1.6 15.2a2 2 0 0 1-2 1.8H10.1a2 2 0 0 1-2-1.8L6.5 12Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>',
   trash: '<path d="M6 9h20M13 9V6.5A1.5 1.5 0 0 1 14.5 5h3A1.5 1.5 0 0 1 19 6.5V9M9.5 9l1.2 17.5A2 2 0 0 0 12.7 28h6.6a2 2 0 0 0 2-2.5L22.5 9" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>',
+  cross: '<circle cx="16" cy="16" r="11" fill="none" stroke="currentColor" stroke-width="2"/><path d="M16 11v10M11 16h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>',
+  brain: '<path d="M11 8a4 4 0 0 0-4 4 4 4 0 0 0 0 8 4 4 0 0 0 4 4h10a4 4 0 0 0 4-4 4 4 0 0 0 0-8 4 4 0 0 0-4-4H11Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M16 8v16" stroke="currentColor" stroke-width="2"/>',
+  cell: '<path d="M16 4l10 6v12l-10 6-10-6V10l10-6Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="16" cy="16" r="3" fill="none" stroke="currentColor" stroke-width="2"/>',
+  mood: '<circle cx="16" cy="16" r="11" fill="none" stroke="currentColor" stroke-width="2"/><path d="M11 19c1.2 1.3 2.9 2 5 2s3.8-.7 5-2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="13" r="1.3" fill="currentColor"/><circle cx="20" cy="13" r="1.3" fill="currentColor"/>',
+  flame: '<path d="M16 5c4 5 7 9 7 13a7 7 0 1 1-14 0c0-1.8.8-3.3 1.8-4.6-.2 1.8.8 2.8 1.7 2.6.9-.2 1-1.3.6-2C11.5 11.8 12 8.5 16 5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>',
+  moon: '<path d="M22 5a12 12 0 1 0 5 21A10 10 0 0 1 22 5Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>',
+  eye: '<path d="M4 16s5-8 12-8 12 8 12 8-5 8-12 8S4 16 4 16Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="16" cy="16" r="4" fill="none" stroke="currentColor" stroke-width="2"/>',
 };
 
 function icon(name, extraClass) {
