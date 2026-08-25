@@ -468,7 +468,6 @@ function initCatalog() {
           ${media}
         </div>
         <div class="product-card__body">
-          <span class="product-card__brand">${CATEGORIES[p.categories[0]] || "Suplemento"}</span>
           <h3 class="product-card__name">${p.name}</h3>
           ${priceMarkup(p)}
           ${cta}
